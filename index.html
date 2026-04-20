@@ -413,10 +413,10 @@ async function submitForm(answers, photoFile) {
 
     const data = await res.json();
 
-    // Proposer le téléchargement PDF au client
-    if (data.pdf_url) {
+    // Téléchargement du fichier HTML onboarding
+    if (data.html_url) {
       const a = document.createElement('a');
-      a.href = data.pdf_url;
+      a.href = data.html_url;
       a.download = '';
       a.target = '_blank';
       a.click();
