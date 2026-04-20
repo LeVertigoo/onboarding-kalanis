@@ -106,7 +106,7 @@ module.exports = async function handler(req, res) {
     const htmlBuffer   = Buffer.from(htmlContent, 'utf-8');
     const htmlFilename = 'onboarding-' + slug + '-' + date + '.html';
     const htmlUrl      = await uploadToSupabase(
-      supabase, htmlBuffer, htmlFilename, 'text/html; charset=utf-8', folder
+      supabase, htmlBuffer, htmlFilename, 'text/html', folder
     );
 
     // 3. Sauvegarder dans Supabase
@@ -135,9 +135,14 @@ module.exports = async function handler(req, res) {
       });
     }
 
-        // Ajouter ?download= pour forcer le téléchargement
-    const htmlDownloadUrl = htmlUrl + "?download=";
-    return res.status(200).json({ ok: true, html_url: htmlDownloadUrl });
+        // Renvoyer le HTML en base64 pour téléchargement direct côté client
+    // (Supabase Storage ne sert pas les .html correctement)
+    return res.status(200).json({
+      ok: true,
+      html_url: htmlUrl,
+      html_b64: htmlBuffer.toString('base64'),
+      html_filename: htmlFilename,
+    });
 
   } catch (err) {
     console.error('Submit error:', err);
