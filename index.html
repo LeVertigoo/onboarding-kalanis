@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding — La Méthode Kalanis™</title>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+@font-face {
+  font-family: 'Parkinsans';
+  src: url('fonts/Parkinsans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue:    #018EBB;
+  --blue-dim: rgba(1,142,187,.12);
+  --blue-border: rgba(1,142,187,.25);
+  --cream:   #FAF9F2;
+  --dark:    #121C28;
+  --border:  rgba(18,28,40,.1);
+  --text2:   #4a5568;
+  --muted:   #718096;
+  --r-md:    13px;
+  --r-lg:    16px;
+  --r-full:  9999px;
+  --ease:    cubic-bezier(.16,1,.3,1);
+  --grain:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+html, body, #root { height: 100%; font-family: 'Parkinsans', sans-serif; background: var(--cream); }
+
+/* ── BACKGROUND ── */
+.bg {
+  min-height: 100vh;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.bg::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: var(--grain);
+  background-size: 180px 180px;
+  opacity: .13;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  background: var(--blue);
+  filter: blur(110px);
+  opacity: .18;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-rail {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px;
+  background: rgba(18,28,40,.06);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 2px;
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── HEADER ── */
+.hdr {
+  position: fixed; top: 0; left: 0; right: 0;
+  padding: 18px 28px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 99;
+}
+.hdr-brand {
+  font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--dark); opacity: .55;
+}
+.hdr-counter {
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  letter-spacing: .06em;
+}
+
+/* ── MAIN STAGE ── */
+.stage {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 100px 24px 100px;
+}
+.card {
+  width: 100%; max-width: 640px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOutUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-18px); }
+}
+@keyframes fadeOutDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(22px); }
+}
+.anim-up   { animation: fadeUp   .42s var(--ease) both; }
+.anim-down { animation: fadeDown .42s var(--ease) both; }
+.anim-out-up   { animation: fadeOutUp   .28s ease both; }
+.anim-out-down { animation: fadeOutDown .28s ease both; }
+
+/* ── SECTION PILL ── */
+.section-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px;
+  border-radius: var(--r-full);
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 28px;
+}
+
+/* ── QUESTION TEXT ── */
+.q-text {
+  font-size: clamp(26px, 4.5vw, 40px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  color: var(--dark);
+  margin-bottom: 10px;
+  text-wrap: pretty;
+}
+.q-hint {
+  font-size: 14px; font-weight: 500; color: var(--muted);
+  margin-bottom: 32px; line-height: 1.5;
+}
+
+/* ── INPUTS ── */
+input[type=text], input[type=url], input[type=number], input[type=email], textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  outline: none;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dark);
+  padding: 12px 0;
+  transition: border-color .2s;
+  resize: none;
+}
+input[type=text]::placeholder, input[type=url]::placeholder,
+input[type=number]::placeholder, textarea::placeholder {
+  color: rgba(18,28,40,.25);
+  font-weight: 500;
+}
+input[type=text]:focus, input[type=url]:focus,
+input[type=number]:focus, textarea:focus {
+  border-bottom-color: var(--blue);
+}
+textarea { min-height: 90px; line-height: 1.5; }
+
+/* ── RADIO / CHECKBOX OPTIONS ── */
+.options-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.opt-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .1s;
+  background: rgba(250,249,242,.6);
+  user-select: none;
+}
+.opt-item:hover { border-color: rgba(1,142,187,.4); background: var(--blue-dim); }
+.opt-item.selected {
+  border-color: var(--blue);
+  background: var(--blue-dim);
+}
+.opt-item:active { transform: scale(.98); }
+.opt-letter {
+  width: 28px; height: 28px; flex-shrink: 0;
+  border-radius: 7px;
+  background: var(--dark);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; letter-spacing: .04em;
+  margin-top: 1px;
+}
+.opt-item.selected .opt-letter { background: var(--blue); }
+.opt-label { font-size: 16px; font-weight: 600; color: var(--dark); line-height: 1.35; }
+.opt-sub { font-size: 13px; font-weight: 500; color: var(--muted); margin-top: 3px; }
+
+/* ── CHECKMARK BADGE ── */
+.chk-box {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border-radius: 6px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 3px;
+  transition: border-color .15s, background .15s;
+}
+.opt-item.selected .chk-box { background: var(--blue); border-color: var(--blue); }
+.chk-box svg { display: none; }
+.opt-item.selected .chk-box svg { display: block; }
+
+/* ── FILE UPLOAD ── */
+.file-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--r-lg);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  background: rgba(250,249,242,.5);
+}
+.file-zone:hover { border-color: var(--blue); background: var(--blue-dim); }
+.file-zone.has-file { border-color: var(--blue); background: var(--blue-dim); }
+.file-zone-icon { font-size: 28px; margin-bottom: 10px; }
+.file-zone-label { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.file-zone-sub { font-size: 13px; color: var(--muted); font-weight: 500; }
+.file-zone input { display: none; }
+
+/* ── FOOTER ACTIONS ── */
+.footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 20px 28px 28px;
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(to top, var(--cream) 60%, transparent);
+  z-index: 99;
+}
+.btn-back {
+  height: 48px; padding: 0 20px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-full);
+  background: transparent;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--muted);
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-back:hover { border-color: var(--dark); color: var(--dark); }
+.btn-next {
+  height: 48px; padding: 0 28px;
+  border-radius: var(--r-full);
+  background: var(--dark);
+  color: #fff;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 14px; font-weight: 800;
+  border: none; cursor: pointer;
+  transition: background .2s, transform .1s;
+  display: flex; align-items: center; gap: 8px;
+  letter-spacing: .02em;
+}
+.btn-next:hover { background: var(--blue); }
+.btn-next:active { transform: scale(.96); }
+.btn-next:disabled { opacity: .35; cursor: not-allowed; }
+.btn-enter-hint {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+  margin-left: auto;
+}
+.kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--border); border-radius: 5px;
+  padding: 2px 7px; font-size: 11px; font-weight: 700; color: var(--muted);
+}
+
+/* ── WELCOME SCREEN ── */
+.welcome {
+  max-width: 560px;
+  text-align: center;
+}
+.welcome-logo {
+  font-size: 13px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 36px;
+}
+.welcome-title {
+  font-size: clamp(34px, 6vw, 52px);
+  font-weight: 800; letter-spacing: -1.5px; line-height: 1.07;
+  color: var(--dark); margin-bottom: 20px;
+}
+.welcome-sub {
+  font-size: 16px; font-weight: 500; color: var(--text2);
+  line-height: 1.6; margin-bottom: 40px;
+}
+.welcome-meta {
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  margin-bottom: 36px;
+}
+.welcome-meta-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 700; color: var(--muted);
+}
+.welcome-meta-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: .5;
+}
+.btn-start {
+  height: 56px; padding: 0 40px;
+  border-radius: var(--r-full);
+  background: var(--dark);
+  color: #fff;
+  font-family: 'Parkinsans', sans-serif;
+  font-size: 16px; font-weight: 800;
+  border: none; cursor: pointer;
+  transition: background .2s, transform .1s;
+  letter-spacing: .02em;
+}
+.btn-start:hover { background: var(--blue); }
+.btn-start:active { transform: scale(.97); }
+
+/* ── DONE SCREEN ── */
+.done-check {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(34,197,94,.12);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 28px;
+  font-size: 30px;
+}
+.done-title {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.1;
+  color: var(--dark); margin-bottom: 14px; text-align: center;
+}
+.done-sub {
+  font-size: 16px; font-weight: 500; color: var(--text2);
+  line-height: 1.6; text-align: center; margin-bottom: 40px;
+  max-width: 440px;
+}
+.done-steps { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.done-step {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: rgba(250,249,242,.7);
+}
+.done-step-badge {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--dark); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+}
+.done-step-text strong { font-size: 14px; font-weight: 800; color: var(--dark); display: block; margin-bottom: 2px; }
+.done-step-text span { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+/* ── SKIP LINK ── */
+.skip-link {
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  text-decoration: none; cursor: pointer;
+  border: none; background: none;
+  font-family: 'Parkinsans', sans-serif;
+  transition: color .2s;
+}
+.skip-link:hover { color: var(--dark); }
+
+/* ── CHARS COUNT ── */
+.char-count { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 6px; text-align: right; }
+
+/* ── MOBILE ── */
+@media (max-width: 600px) {
+  .hdr { padding: 14px 16px 0; }
+  .stage { padding: 90px 16px 90px; }
+  .footer { padding: 16px 16px 20px; }
+  .btn-enter-hint { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── SUBMIT CONFIG ─────────────────────────────────────────────────────────
+// Le formulaire envoie vers /api/submit (Vercel serverless)
+// qui génère le PDF, upload sur Supabase, et forward vers n8n.
+// Rien à modifier ici.
+const SUBMIT_URL = '/api/submit';
+
+async function submitForm(answers, photoFile) {
+  try {
+    const formData = new FormData();
+
+    // Toutes les réponses texte dans un seul champ JSON
+    formData.append('answers', JSON.stringify(answers));
+
+    // Photo en fichier réel si présente
+    if (photoFile) {
+      formData.append('photo', photoFile);
+    }
+
+    const res = await fetch(SUBMIT_URL, {
+      method: 'POST',
+      body: formData,
+      // Pas de Content-Type header — le navigateur le set automatiquement avec le boundary
+    });
+
+    const data = await res.json();
+
+    // Proposer le téléchargement PDF au client
+    if (data.pdf_url) {
+      const a = document.createElement('a');
+      a.href = data.pdf_url;
+      a.download = '';
+      a.target = '_blank';
+      a.click();
+    }
+
+    return { ok: res.ok, ...data };
+  } catch(e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+// ── LETTERS FOR OPTION KEYS ──
+const LETTERS = ['A','B','C','D','E','F','G','H'];
+
+// ── QUESTION DEFINITIONS ──
+const ALL_QUESTIONS = [
+  // ── PRÉSENTATION ──
+  {
+    id: 'name', section: 'PRÉSENTATION',
+    q: 'Comment tu t\'appelles ?',
+    hint: 'Prénom et nom de famille',
+    type: 'text', placeholder: 'Thomas Fournier', required: true,
+  },
+  {
+    id: 'linkedin_url', section: 'PRÉSENTATION',
+    q: 'Le lien de ton profil LinkedIn',
+    hint: 'Copie-colle directement l\'URL de ton profil',
+    type: 'url', placeholder: 'https://linkedin.com/in/thomas-fournier', required: true,
+  },
+  {
+    id: 'bio', section: 'PRÉSENTATION',
+    q: 'Dis-moi en quelques lignes — qui es-tu et que fais-tu ?',
+    hint: 'Pas besoin de te vendre, parle-moi naturellement',
+    type: 'textarea', placeholder: 'Je suis consultant en stratégie marketing depuis 5 ans, je travaille principalement avec des PME...', required: true,
+  },
+  {
+    id: 'distinctive', section: 'PRÉSENTATION',
+    q: 'Dans ta vie de tous les jours, il y a un truc qui te définit ?',
+    hint: 'Un objet peu commun, une habitude, un hobby, un rituel... Même si ça te paraît bête, note-le.',
+    type: 'textarea', placeholder: 'Je commence chaque journée avec un carnet papier, je ne rate jamais un match de foot...', required: false,
+  },
+
+  // ── TON OFFRE ──
+  {
+    id: 'offer', section: 'TON OFFRE',
+    q: 'Présente-moi ton offre',
+    hint: 'Ce que tu fais, comment tu le fais, à quelle durée / quel format',
+    type: 'textarea', placeholder: 'J\'accompagne des consultants à doubler leur CA en 6 mois via une stratégie de contenu sur-mesure...', required: true,
+  },
+  {
+    id: 'promise', section: 'TON OFFRE',
+    q: 'Si tu devais résumer la promesse de ton offre en 1 ou 2 phrases ?',
+    hint: 'Ce que le client obtient concrètement à la fin',
+    type: 'textarea', placeholder: 'Tu passes de 2 à 5 clients par mois sans prospecter à froid...', required: true,
+  },
+  {
+    id: 'icp', section: 'TON OFFRE',
+    q: 'Qui est ton client idéal (ICP) ?',
+    hint: 'Quel type de profil, quel métier, quel contexte',
+    type: 'textarea', placeholder: 'Consultant indépendant entre 3 et 8K/mois, actif sur LinkedIn, offre testée...', required: true,
+  },
+  {
+    id: 'icp_detail', section: 'TON OFFRE',
+    q: 'Tu vises qui exactement — âge, domaine, niveau de revenus ?',
+    hint: 'Plus c\'est précis, mieux c\'est pour construire le contenu et le setting',
+    type: 'textarea', placeholder: '30-45 ans, dev / consultant / designer / CM, 3K-8K/mois, en France...', required: false,
+  },
+
+  // ── ACQUISITION ──
+  {
+    id: 'setting_xp', section: 'ACQUISITION',
+    q: 'T\'as déjà fait du setting (prospection) sur LinkedIn ?',
+    hint: null,
+    type: 'radio', required: true,
+    options: [
+      { val: 'oui_souvent',   label: 'Oui — souvent',       sub: 'C\'est déjà une habitude dans ton activité' },
+      { val: 'oui_peu',       label: 'Oui — mais pas souvent', sub: 'T\'as essayé, sans vraiment structurer ça' },
+      { val: 'non',           label: 'Non — jamais',         sub: 'Tu pars de zéro sur ce sujet' },
+    ],
+  },
+  {
+    id: 'setting_results', section: 'ACQUISITION',
+    q: 'Quels étaient tes résultats jusqu\'ici ?',
+    hint: 'Nombre de messages par semaine, taux de réponse, appels bookés... même approximatif c\'est utile',
+    type: 'textarea', placeholder: 'J\'envoyais 20-30 DM/sem, 10% de réponse, 1-2 appels bookés...', required: false,
+    show: (a) => a.setting_xp === 'oui_souvent' || a.setting_xp === 'oui_peu',
+  },
+  {
+    id: 'prospects_week', section: 'ACQUISITION',
+    q: 'Combien de prospects tu contactes par semaine en ce moment ?',
+    hint: 'Mets 0 si tu ne fais pas encore de prospection active',
+    type: 'number', placeholder: '0', required: true,
+  },
+  {
+    id: 'outreach_method', section: 'ACQUISITION',
+    q: 'Tu utilises quelle méthode pour rentrer en contact ?',
+    hint: 'Plusieurs réponses possibles',
+    type: 'checkbox', required: false,
+    options: [
+      { val: 'dm_froid',   label: 'DM à froid' },
+      { val: 'commentaires', label: 'Commentaires sur les posts' },
+      { val: 'connexions', label: 'Demandes de connexion + message' },
+      { val: 'inmail',     label: 'InMail (Sales Nav)' },
+      { val: 'autre',      label: 'Autre' },
+    ],
+  },
+  {
+    id: 'response_rate', section: 'ACQUISITION',
+    q: 'Ton taux de réponse, il est à combien — même approximatif ?',
+    hint: 'Le pourcentage de prospects qui te répondent (peu importe la réponse)',
+    type: 'text', placeholder: 'Environ 10-15%', required: false,
+  },
+  {
+    id: 'rdv_week', section: 'ACQUISITION',
+    q: 'Combien de RDV tu génères par semaine via LinkedIn actuellement ?',
+    hint: null,
+    type: 'number', placeholder: '0', required: true,
+  },
+  {
+    id: 'main_blocker', section: 'ACQUISITION',
+    q: 'C\'est quoi le principal blocage aujourd\'hui ?',
+    hint: 'Celui qui te coûte le plus de clients',
+    type: 'radio', required: true,
+    options: [
+      { val: 'volume',    label: 'Le volume', sub: 'Je n\'envoie pas assez de messages' },
+      { val: 'qualite',   label: 'La qualité des réponses', sub: 'Les gens répondent mais c\'est pas la bonne cible' },
+      { val: 'booking',   label: 'Le passage à l\'appel', sub: 'Les gens répondent mais ne bookent pas' },
+      { val: 'pas_clair', label: 'Pas encore clair pour moi', sub: 'J\'ai du mal à identifier le vrai problème' },
+    ],
+  },
+  {
+    id: 'manages_convos', section: 'ACQUISITION',
+    q: 'Quand un prospect répond, c\'est toi qui gères la conversation jusqu\'au RDV ?',
+    hint: null,
+    type: 'radio', required: true,
+    options: [
+      { val: 'oui',   label: 'Oui, je gère tout', sub: null },
+      { val: 'non',   label: 'Non, j\'ai quelqu\'un', sub: 'Un setter ou un assistant' },
+    ],
+  },
+  {
+    id: 'has_followups', section: 'ACQUISITION',
+    q: 'T\'as des relances en place si pas de réponse ?',
+    hint: null,
+    type: 'radio', required: true,
+    options: [
+      { val: 'oui',     label: 'Oui', sub: 'J\'ai une séquence de relance' },
+      { val: 'non',     label: 'Non', sub: 'Je passe au suivant si pas de réponse' },
+      { val: 'parfois', label: 'Parfois', sub: 'De manière non structurée' },
+    ],
+  },
+  {
+    id: 'rdv_target', section: 'ACQUISITION',
+    q: 'Pour que ce soit rentable, tu vises combien de RDV qualifiés par semaine ?',
+    hint: 'Ça m\'aide à calibrer la machine de prospection avec Damien',
+    type: 'number', placeholder: '5', required: true,
+  },
+
+  // ── PROFIL & IDENTITÉ ──
+  {
+    id: 'banner_content', section: 'PROFIL & IDENTITÉ',
+    q: 'Qu\'est-ce que tu aimerais mettre en avant sur ta bannière LinkedIn ?',
+    hint: 'Le gros titre, ton offre, ta promesse, ta proposition de valeur...',
+    type: 'textarea', placeholder: 'Mon offre principale + un chiffre de résultat + un CTA vers mon Calendly...', required: true,
+  },
+  {
+    id: 'social_proof', section: 'PROFIL & IDENTITÉ',
+    q: 'T\'as de la preuve sociale ?',
+    hint: 'Nombre de clients accompagnés, années d\'expérience, résultats obtenus, témoignages...',
+    type: 'textarea', placeholder: '+30 clients accompagnés, 8 ans d\'expérience, résultat moyen de X...', required: false,
+  },
+  {
+    id: 'ma_selection', section: 'PROFIL & IDENTITÉ',
+    q: 'Que voudrais-tu dans ta section "Ma sélection" ?',
+    hint: 'Les 3 liens épinglés en haut de ton profil — plusieurs réponses possibles',
+    type: 'checkbox', required: false,
+    options: [
+      { val: 'site',      label: 'Site web' },
+      { val: 'calendly',  label: 'Calendly / prise de RDV' },
+      { val: 'lead',      label: 'Lead magnet / ressource gratuite' },
+      { val: 'autre',     label: 'Autre' },
+    ],
+  },
+  {
+    id: 'link_site', section: 'PROFIL & IDENTITÉ',
+    q: 'Le lien de ton site web',
+    hint: null,
+    type: 'url', placeholder: 'https://monsite.fr', required: false,
+    show: (a) => (a.ma_selection || []).includes('site'),
+  },
+  {
+    id: 'link_calendly', section: 'PROFIL & IDENTITÉ',
+    q: 'Ton lien Calendly (ou autre outil de prise de RDV)',
+    hint: null,
+    type: 'url', placeholder: 'https://calendly.com/thomas-frn/audit', required: false,
+    show: (a) => (a.ma_selection || []).includes('calendly'),
+  },
+  {
+    id: 'link_lead', section: 'PROFIL & IDENTITÉ',
+    q: 'Le lien de ton lead magnet / ressource gratuite',
+    hint: 'PDF, guide, mini-formation, newsletter...',
+    type: 'url', placeholder: 'https://...', required: false,
+    show: (a) => (a.ma_selection || []).includes('lead'),
+  },
+  {
+    id: 'link_autre_sel', section: 'PROFIL & IDENTITÉ',
+    q: 'Le lien pour ta sélection "Autre"',
+    hint: 'Ce que tu veux mettre en avant dans ta 3e sélection',
+    type: 'url', placeholder: 'https://...', required: false,
+    show: (a) => (a.ma_selection || []).includes('autre'),
+  },
+  {
+    id: 'has_brand', section: 'PROFIL & IDENTITÉ',
+    q: 'T\'as une charte graphique / identité visuelle existante ?',
+    hint: null,
+    type: 'radio', required: true,
+    options: [
+      { val: 'oui', label: 'Oui', sub: 'J\'ai des couleurs, une typo, un univers défini' },
+      { val: 'non', label: 'Non, pas encore', sub: 'On part de zéro ensemble' },
+    ],
+  },
+  {
+    id: 'brand_link', section: 'PROFIL & IDENTITÉ',
+    q: 'Envoie-moi le lien de ta charte ou de tes éléments graphiques',
+    hint: 'WeTransfer, Dropbox, Google Drive, site web, Behance... tout format accepté',
+    type: 'url', placeholder: 'https://drive.google.com/...', required: false,
+    show: (a) => a.has_brand === 'oui',
+  },
+  {
+    id: 'color_prefs', section: 'PROFIL & IDENTITÉ',
+    q: 'T\'as des couleurs ou des envies visuelles en tête ?',
+    hint: 'Des couleurs qui te ressemblent, un univers, une ambiance... même vague c\'est utile',
+    type: 'textarea', placeholder: 'J\'aime les tons sombres et épurés, quelque chose de premium...', required: false,
+    show: (a) => a.has_brand === 'non',
+  },
+  {
+    id: 'photo', section: 'PROFIL & IDENTITÉ',
+    q: 'Envoie-moi une photo de toi en bonne qualité',
+    hint: 'Fond neutre de préférence, bien éclairée — pour la bannière et les visuels',
+    type: 'file', required: false,
+  },
+  {
+    id: 'inspirations', section: 'PROFIL & IDENTITÉ',
+    q: 'T\'as des inspirations — profils LinkedIn ou marques qui t\'inspirent visuellement ?',
+    hint: 'Donne-moi des noms ou des liens, séparés d\'une virgule',
+    type: 'textarea', placeholder: 'Alex Hormozi, Le Wagon, Malt... ou des comptes LinkedIn que tu aimes', required: false,
+  },
+
+  // ── OBJECTIFS ──
+  {
+    id: 'objective', section: 'OBJECTIFS',
+    q: 'Ton objectif d\'ici 3 mois — concret et chiffré si possible',
+    hint: 'CA mensuel, nombre de clients, RDV par semaine... ce que "succès" signifie pour toi',
+    type: 'textarea', placeholder: '8K/mois en récurrent, 5 clients actifs, 3 RDV qualifiés par semaine...', required: true,
+  },
+  {
+    id: 'free_field', section: 'OBJECTIFS',
+    q: 'Champ libre — quelque chose à préciser ou à ajouter ?',
+    hint: 'Préférences, contraintes, infos qui t\'ont semblé manquantes, questions pour l\'équipe...',
+    type: 'textarea', placeholder: 'Je voulais aussi mentionner que...', required: false,
+  },
+];
+
+// ── VISIBLE QUESTIONS BASED ON ANSWERS ──
+function getVisible(answers) {
+  return ALL_QUESTIONS.filter(q => !q.show || q.show(answers));
+}
+
+// ── SECTION COLORS ──
+const SECTION_COLORS = {
+  'PRÉSENTATION':    '#018EBB',
+  'TON OFFRE':       '#018EBB',
+  'ACQUISITION':     '#018EBB',
+  'PROFIL & IDENTITÉ': '#018EBB',
+  'OBJECTIFS':       '#018EBB',
+};
+
+// ─────────────────────────────────────────────────────────
+// MAIN APP
+// ─────────────────────────────────────────────────────────
+function App() {
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('kalanis_ob') || '{}'); } catch(e) { return {}; } })();
+  const [step, setStep] = useState(saved._step ?? -1); // -1 = welcome, -2 = done
+  const [answers, setAnswers] = useState(saved._answers ?? {});
+  const [anim, setAnim] = useState('up');
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [fileLabel, setFileLabel] = useState({});
+  const [fileObjects, setFileObjects] = useState({});
+  const inputRef = useRef(null);
+
+  const visible = getVisible(answers);
+  const total = visible.length;
+  const cur = visible[step] ?? null;
+  const progress = step < 0 ? 0 : ((step) / total) * 100;
+
+  // persist
+  useEffect(() => {
+    try { localStorage.setItem('kalanis_ob', JSON.stringify({ _step: step, _answers: answers })); } catch(e) {}
+  }, [step, answers]);
+
+  // focus input
+  useEffect(() => {
+    if (step >= 0 && step < total) {
+      setTimeout(() => { inputRef.current?.focus(); }, 450);
+    }
+  }, [step]);
+
+  const navigate = useCallback((dir) => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setAnim(dir > 0 ? 'out-up' : 'out-down');
+    setTimeout(() => {
+      setStep(s => s + dir);
+      setAnim(dir > 0 ? 'up' : 'down');
+      setIsAnimating(false);
+    }, 280);
+  }, [isAnimating]);
+
+  const handleNext = useCallback(() => {
+    if (step === -1) { navigate(1); return; }
+    if (step >= total - 1) {
+      // Submit to webhook before showing done screen
+      submitForm(answers, fileObjects.photo || null);
+      navigate(1);
+      return;
+    }
+    navigate(1);
+  }, [step, total, navigate, answers, fileObjects]);
+
+  const handleBack = useCallback(() => {
+    if (step <= 0) { navigate(-1); return; }
+    navigate(-1);
+  }, [step, navigate]);
+
+  const updateAnswer = (id, val) => setAnswers(a => ({ ...a, [id]: val }));
+
+  const toggleCheckbox = (id, val) => {
+    setAnswers(a => {
+      const arr = a[id] || [];
+      return { ...a, [id]: arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val] };
+    });
+  };
+
+  // keyboard
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && cur?.type !== 'textarea') {
+        e.preventDefault();
+        handleNext();
+      }
+      if (e.key === 'Enter' && e.metaKey && cur?.type === 'textarea') {
+        e.preventDefault();
+        handleNext();
+      }
+      // letter keys for radio/checkbox
+      if (cur?.options && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const idx = LETTERS.indexOf(e.key.toUpperCase());
+        if (idx >= 0 && idx < cur.options.length) {
+          const opt = cur.options[idx];
+          if (cur.type === 'radio') updateAnswer(cur.id, opt.val);
+          else toggleCheckbox(cur.id, opt.val);
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [cur, handleNext, answers]);
+
+  const isRequired = cur?.required;
+  const isEmpty = (v) => {
+    if (!v) return true;
+    if (Array.isArray(v)) return false; // checkbox is always ok
+    return v.toString().trim() === '';
+  };
+  const canProceed = !cur || !isRequired || !isEmpty(answers[cur?.id]);
+
+  const animClass = {
+    'up': 'anim-up', 'down': 'anim-down',
+    'out-up': 'anim-out-up', 'out-down': 'anim-out-down',
+  }[anim] ?? 'anim-up';
+
+  // ── DONE SCREEN ──
+  if (step >= total && step !== -1) {
+    const first = answers.name?.split(' ')[0] || 'toi';
+    return (
+      <div className="bg">
+        <div className="blob" style={{width:500,height:500,top:-120,right:-180}} />
+        <div className="blob" style={{width:350,height:350,bottom:-100,left:-80}} />
+        <div className="stage">
+          <div className={`card ${animClass}`} style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+            <div className="done-check">✓</div>
+            <div className="done-title">C'est bon, {first} 🎉</div>
+            <div className="done-sub">Tout est bien reçu. Voici ce qui se passe maintenant :</div>
+            <div className="done-steps">
+              {[
+                { n:'J1', title:'Accès à l\'espace Notion + formation', text:'Tu reçois dans les prochaines minutes ton accès à l\'espace et une vidéo de bienvenue.' },
+                { n:'S1', title:'Call avec Sarah — Positionnement & copie', text:'Premier vrai call de l\'accompagnement. Sarah revoit ton offre, ton positionnement et lance le copywriting du profil.' },
+                { n:'S2', title:'Call avec Thomas — V1 visuelle', text:'Thomas te présente la première version de ta bannière et ton univers graphique. Tu valides ou ajustes.' },
+                { n:'S3', title:'Call avec Damien — Mise en place setting', text:'Mise en place de ta trame de prospection avec Damien. Livraison de la stratégie & copy par Sarah. Livraison de l\'identité visuelle finale par Thomas.' },
+              ].map(s => (
+                <div key={s.n} className="done-step">
+                  <div className="done-step-badge">{s.n}</div>
+                  <div className="done-step-text"><strong>{s.title}</strong><span>{s.text}</span></div>
+                </div>
+              ))}
+            </div>
+            <div style={{marginTop:28,textAlign:'center'}}>
+              <span className="k-label" style={{fontSize:11,color:'#718096',letterSpacing:'.1em'}}>Questions ? → envoie-nous un message sur ton canal privé Slack</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── WELCOME SCREEN ──
+  if (step === -1) {
+    return (
+      <div className="bg">
+        <div className="blob" style={{width:600,height:600,top:-180,right:-200}} />
+        <div className="blob" style={{width:400,height:400,bottom:-150,left:-100}} />
+        <div className="stage">
+          <div className={`welcome ${animClass}`}>
+            <div className="welcome-logo">La Méthode Kalanis™</div>
+            <div className="welcome-title">Bienvenue dans<br/>l'accompagnement.</div>
+            <div className="welcome-sub">
+              Ce formulaire prend environ 15 minutes. Il me donne tout ce qu'il faut pour que l'équipe démarre le travail dès demain — profil, setting, stratégie.
+            </div>
+            <div className="welcome-meta">
+              <div className="welcome-meta-item">⏱ 15 min environ</div>
+              <div className="welcome-meta-dot" />
+              <div className="welcome-meta-item">{total} questions</div>
+              <div className="welcome-meta-dot" />
+              <div className="welcome-meta-item">Tes données sont privées</div>
+            </div>
+            <button className="btn-start" onClick={handleNext}>C'est parti →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!cur) return null;
+
+  // section progress within section
+  const sectionQuestions = visible.filter(q => q.section === cur.section);
+  const sectionIdx = sectionQuestions.findIndex(q => q.id === cur.id) + 1;
+
+  return (
+    <div className="bg">
+      <div className="blob" style={{width:500,height:500,top:-150,right:-150}} />
+      <div className="blob" style={{width:300,height:300,bottom:-80,left:-60}} />
+
+      {/* Progress bar */}
+      <div className="progress-rail">
+        <div className="progress-fill" style={{width:`${progress}%`}} />
+      </div>
+
+      {/* Header */}
+      <div className="hdr">
+        <div className="hdr-brand">Kalanis</div>
+        <div className="hdr-counter">{step + 1} / {total}</div>
+      </div>
+
+      {/* Main */}
+      <div className="stage">
+        <div className={`card ${animClass}`} key={cur.id}>
+          <div className="section-pill">
+            {cur.section} · {sectionIdx}/{sectionQuestions.length}
+          </div>
+
+          <div className="q-text">{cur.q}</div>
+          {cur.hint && <div className="q-hint">{cur.hint}</div>}
+
+          {/* TEXT / URL / NUMBER */}
+          {(cur.type === 'text' || cur.type === 'url' || cur.type === 'number') && (
+            <input
+              ref={inputRef}
+              type={cur.type}
+              placeholder={cur.placeholder}
+              value={answers[cur.id] || ''}
+              onChange={e => updateAnswer(cur.id, e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (canProceed) handleNext(); } }}
+              inputMode={cur.type === 'number' ? 'numeric' : undefined}
+              min={cur.type === 'number' ? 0 : undefined}
+            />
+          )}
+
+          {/* TEXTAREA */}
+          {cur.type === 'textarea' && (
+            <div>
+              <textarea
+                ref={inputRef}
+                placeholder={cur.placeholder}
+                value={answers[cur.id] || ''}
+                onChange={e => updateAnswer(cur.id, e.target.value)}
+                rows={4}
+              />
+              <div className="char-count" style={{opacity: answers[cur.id]?.length > 0 ? 1 : 0}}>
+                {(answers[cur.id] || '').length} caractères — ⌘↵ pour continuer
+              </div>
+            </div>
+          )}
+
+          {/* RADIO */}
+          {cur.type === 'radio' && (
+            <div className="options-list">
+              {cur.options.map((opt, i) => (
+                <div
+                  key={opt.val}
+                  className={`opt-item ${answers[cur.id] === opt.val ? 'selected' : ''}`}
+                  onClick={() => { updateAnswer(cur.id, opt.val); setTimeout(handleNext, 350); }}
+                >
+                  <div className="opt-letter">{LETTERS[i]}</div>
+                  <div>
+                    <div className="opt-label">{opt.label}</div>
+                    {opt.sub && <div className="opt-sub">{opt.sub}</div>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* CHECKBOX */}
+          {cur.type === 'checkbox' && (
+            <div className="options-list">
+              {cur.options.map((opt, i) => {
+                const sel = (answers[cur.id] || []).includes(opt.val);
+                return (
+                  <div
+                    key={opt.val}
+                    className={`opt-item ${sel ? 'selected' : ''}`}
+                    onClick={() => toggleCheckbox(cur.id, opt.val)}
+                  >
+                    <div className="chk-box">
+                      <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                        <path d="M1 4L4.5 7.5L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div className="opt-label" style={{marginTop:2}}>{opt.label}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* FILE */}
+          {cur.type === 'file' && (
+            <label>
+              <div className={`file-zone ${fileLabel[cur.id] ? 'has-file' : ''}`}>
+                <div className="file-zone-icon">{fileLabel[cur.id] ? '✓' : '📎'}</div>
+                <div className="file-zone-label">
+                  {fileLabel[cur.id] || 'Clique ou glisse ton fichier ici'}
+                </div>
+                <div className="file-zone-sub">
+                  {fileLabel[cur.id] ? 'Fichier sélectionné — tu peux continuer' : 'JPG, PNG, PDF · max 20 MB'}
+                </div>
+                <input type="file" accept="image/*,.pdf" onChange={e => {
+                  if (e.target.files[0]) {
+                    setFileLabel(f => ({...f, [cur.id]: e.target.files[0].name}));
+                    updateAnswer(cur.id, e.target.files[0].name);
+                  }
+                }} />
+              </div>
+            </label>
+          )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="footer">
+        <button className="btn-back" onClick={handleBack}>
+          ← {step === 0 ? 'Accueil' : 'Retour'}
+        </button>
+        {cur.type !== 'radio' && (
+          <button className="btn-next" onClick={handleNext} disabled={!canProceed}>
+            {step >= total - 1 ? 'Terminer' : 'Continuer'} →
+          </button>
+        )}
+        {cur.type === 'radio' && (
+          <button className="btn-next" onClick={handleNext} disabled={!canProceed} style={{opacity: answers[cur.id] ? 1 : 0.35}}>
+            Continuer →
+          </button>
+        )}
+        {!isRequired && cur.type !== 'radio' && (
+          <button className="skip-link" onClick={handleNext}>
+            Passer →
+          </button>
+        )}
+        {cur.type === 'textarea' && (
+          <div className="btn-enter-hint">
+            <span className="kbd">⌘</span><span className="kbd">↵</span> pour continuer
+          </div>
+        )}
+        {(cur.type === 'text' || cur.type === 'url' || cur.type === 'number') && (
+          <div className="btn-enter-hint">
+            <span className="kbd">↵</span> pour continuer
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
