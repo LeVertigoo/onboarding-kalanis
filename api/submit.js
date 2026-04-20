@@ -109,10 +109,10 @@ async function uploadToSupabase(supabase, fileBuffer, filename, mimetype, folder
 // ── HELPER : générer le PDF avec Puppeteer ────────────────────────────────
 async function generatePDF(htmlContent) {
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
+    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+    defaultViewport: { width: 794, height: 1123 },
     executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
+    headless: 'shell',
   });
 
   const page = await browser.newPage();
