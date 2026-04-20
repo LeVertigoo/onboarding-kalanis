@@ -413,13 +413,16 @@ async function submitForm(answers, photoFile) {
 
     const data = await res.json();
 
-    // Téléchargement du fichier HTML onboarding
-    if (data.html_url) {
+    // Téléchargement direct via Blob (bypasse les restrictions Supabase)
+    if (data.html_b64) {
+      const bytes = Uint8Array.from(atob(data.html_b64), c => c.charCodeAt(0));
+      const blob  = new Blob([bytes], { type: 'text/html' });
+      const url   = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = data.html_url;
-      a.download = '';
-      a.target = '_blank';
+      a.href = url;
+      a.download = data.html_filename || 'onboarding-kalanis.html';
       a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     }
 
     return { ok: res.ok, ...data };
