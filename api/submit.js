@@ -135,7 +135,9 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ ok: true, html_url: htmlUrl });
+        // Ajouter ?download= pour forcer le téléchargement
+    const htmlDownloadUrl = htmlUrl + "?download=";
+    return res.status(200).json({ ok: true, html_url: htmlDownloadUrl });
 
   } catch (err) {
     console.error('Submit error:', err);
